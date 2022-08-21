@@ -1,0 +1,42 @@
+headers_amazon = {
+	'authority': 'eu.mesk.skill.music.a2z.com',
+	'accept': '*/*',
+	'accept-language': 'en-US,en;q=0.9',
+	'content-type': 'text/plain;charset=UTF-8',
+	'origin': 'https://music.amazon.in',
+	'referer': 'https://music.amazon.in/',
+	'sec-ch-ua': '" Not A;Brand";v="99", "Chromium";v="100", "Google Chrome";v="100"',
+	'sec-ch-ua-mobile': '?0',
+	'sec-ch-ua-platform': '"Linux"',
+	'sec-fetch-dest': 'empty',
+	'sec-fetch-mode': 'cors',
+	'sec-fetch-site': 'cross-site',
+	'user-agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/100.0.4896.60 Safari/537.36',
+	'x-amzn-application-version': '1.0.9855.0',
+	'x-amzn-authentication': '{"interface":"ClientAuthenticationInterface.v1_0.ClientTokenElement","accessToken":""}',
+	'x-amzn-csrf': '{"interface":"CSRFInterface.v1_0.CSRFHeaderElement","token":"XXXXXXXXXXXXXXXXXXXXXX=","timestamp":"XXXXXXXXXXXXXXX","rndNonce":"XXXXXXXXXX"}',
+	'x-amzn-currency-of-preference': 'INR',
+	'x-amzn-device-family': 'WebPlayer',
+	'x-amzn-device-height': '1080',
+	'x-amzn-device-id': 'XXXXXXXXXXXXXXXXX',
+	'x-amzn-device-language': 'en_IN',
+	'x-amzn-device-model': 'WEBPLAYER',
+	'x-amzn-device-time-zone': 'Asia/Calcutta',
+	'x-amzn-device-width': '1920',
+	'x-amzn-is-hd-supported': 'true',
+	'x-amzn-music-domain': 'music.amazon.in',
+	'x-amzn-os-version': '1.0',
+	'x-amzn-referer': 'music.amazon.in',
+	'x-amzn-session-id': 'XXXX-XXXXX-XXXXX',
+	'x-amzn-user-agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/100.0.4896.60 Safari/537.36',
+	}
+set_results = {
+		'1st_set_results': '',
+		'2nd_set_results':'"next":"tztok-v2_yDSNVKX4qpd-k5g2XEe2Tm_Nlzd4-XZ9fuNUMWDqmo5MM231Xo0ZvwoenzCeFxY2",',
+		'3rd_set_results':'"next":"tztok-v2_yDSNVKX4qpd-k5g2XEe2Tqv8Q6kVDwCNa7MH7lP6fznkiCZ825CgHn0Kx32FsQte",',
+		'4th_set_results':'"next":"tztok-v2_yDSNVKX4qpd-k5g2XEe2Trrp-R1LaERyCHS2efBbZGvDJYOjPclzSGF0jgwratLO",',
+		'5th_set_results':'"next":"tztok-v2_yDSNVKX4qpd-k5g2XEe2Tt8xBNXiYDVgoLfaeSA0cBIOcmqLVsXdWABD9dNlHxXt",',
+	}
+
+data_start = '{"deeplink":"{\\"interface\\":\\"DeeplinkInterface.v1_0.DeeplinkClientInformation\\",\\"deeplink\\":\\"/albums/'
+data_end = '\\"}"}'
