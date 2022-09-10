@@ -1,33 +1,37 @@
 import pandas as pd
 import plotly.graph_objects as go
 from plotly.subplots import make_subplots
-import os
 import copy 
 from skimage import io
 from PIL import Image
 import base64
 import plotly.express as px
+from pathlib import Path
 
-def create_charts():
+root = Path(__file__).parent.parent
+font_family = 'Rubik'
+chart_title_font_size = 30
+title_x_y = [0.015,0.97] #xanchor left, yanchor top , also xref, yref container
+subhead_string_font_size = 21
+subhead_string_x_y = [0, 1] #xanchor left, yanchor top #xref, yref paper 
+table_copy_font_size = 24
+bottom_string_font_size = 15
+bottom_string_x_y = [0, 0.045] #xanchor left, yanchor middle #xref, yref paper 
+graphic_bg_color = '#ffeee6' 
+table_line_width = 0
+table_line_color = 'grey'
+divider_x = 0.335
+col_1_2_margin_from_top = 0.275
+col_1_2_width = 0.35
+col_3_width = 1 - (2*col_1_2_width)
+col_name_width = 0.75
+col_rating_width = 1 - col_name_width
+cell_height = 65 # this is pixels, not on 0 to 1 scale
+line_start_margin_bottom = (450 - ((4*cell_height) + (col_1_2_margin_from_top*450)))/450
 
-	font_family = 'Rubik'
-	chart_title_font_size = 36
-	body_copy_font_size = 26
-	explanation_string_font_size = body_copy_font_size
-	graphic_bg_color = '#ffeee6' 
-	table_line_width = 0
-	# table_line_color = graphic_bg_color
-	col_1_2_margin_from_top = 0.2
-	col_1_2_width = 0.35
-	col_3_width = 1 - (2*col_1_2_width)
-	col_name_width = 0.8
-	col_rating_width = 1 - col_name_width
-	cell_height = 60 # this is pixels, not on 0 to 1 scale
-	line_start_margin_bottom = (450 - ((4*cell_height) + (col_1_2_margin_from_top*450)))/450
+def create_genre_charts(input_csv_path):
 
-
-	genre_ratings_csv_path = 'data/analysis/genre_wise_out_of_10.csv'
-	genre_ratings_df = pd.read_csv(genre_ratings_csv_path)
+	genre_ratings_df = pd.read_csv(input_csv_path)
 
 	replacement_dict = {
 						'amazon': 'Amazon Music',
@@ -45,8 +49,21 @@ def create_charts():
 	#service,Rolling_Stone_500,NME_500,Blues,EDM,Hip-Hop,Jazz,Metal,Pop,R&B,Rock,Western Classical,World Music
 	genres_list.remove('service')
 
+	bottom_string_dict = {
+						'Blues':"Flickr/Keith Ellwood",
+						'EDM':"Flickr/emeeelea",
+						'Hip-Hop':"Flickr/popfuzz",
+						'Jazz':"Flickr/Kevin Tourino",
+						'Metal':"Flickr/st3f4n",
+						'Pop':"Flickr/Valentina Ceccatelli",
+						'R&B':"Flickr/Patrick Gilbin",
+						'Rock':"Flickr/Soundveil",
+						'Western Classical':"Flickr/University of Denver",
+						'World Music':"Flickr/San Mateo County",
+						}
+
 	for genre in genres_list:
-		if genre != 'Blues':continue
+		if ((genre == 'Rolling_Stone_500') or (genre == 'NME_500')): continue
 		genre_ratings_df_culled = genre_ratings_df[['service', genre]]
 		culled_df_sorted = genre_ratings_df_culled.sort_values(by=[genre], ascending=False)
 
@@ -86,7 +103,7 @@ def create_charts():
 								align = ['left'],
 								font = dict(
 										color = 'black', 
-										size = body_copy_font_size,
+										size = table_copy_font_size,
 										family = font_family,
 										),
 								height=0,
@@ -94,12 +111,12 @@ def create_charts():
 					cells=dict(
 								values=[culled_df_sorted['service'][start:end], culled_df_sorted[genre][start:end]],
 								fill_color = graphic_bg_color,
-								# line_color = table_line_color,
+								line_color = table_line_color,
 								line_width = table_line_width,
 								align = ['left'],
 								font = dict(
 										color = 'black', 
-										size = body_copy_font_size,
+										size = table_copy_font_size,
 										family = font_family,
 										),
 								height= cell_height,
@@ -109,9 +126,9 @@ def create_charts():
 								col=column_number
 								)
 
-		
-		# side_image_path = "assets/smaller.png"
-		side_image_path = "assets/pop_after_inkscape.png"
+		genre_fragment =\
+			genre.lower().replace(' ', '_').replace('&', 'n').replace('-', '_')
+		side_image_path = root / ('assets/' + genre_fragment + '_after_inkscape.png')
 
 		img = io.imread(side_image_path)
 
@@ -135,28 +152,50 @@ def create_charts():
 								type="line",
 								yref="paper",
 								xref="paper",
-								x0=col_1_2_width,
+								x0=divider_x,
 								y0= line_start_margin_bottom,
-								x1=col_1_2_width,
+								x1=divider_x,
 								y1= 1 - col_1_2_margin_from_top,
-								line=dict(color='red', width=2),
+								line=dict(color='#ff652f', width=4),
 								)
 								)
 
-		explanation_string = "XXXX"
+		subhead_string = "Services in India rated out of 10. The more a service<br>" +\
+						 "covers critically-acclaimed albums in " +\
+						genre + ",<br>" +\
+						 "the higher its rating."
 
 		fig.add_annotation(
-						text=explanation_string,
+						text=subhead_string,
 						font=dict(
 								color="black",
-								size = explanation_string_font_size,
+								size = subhead_string_font_size,
 								family = font_family,
 								),
 				  		xref="paper", 
-						x=0,
+						x= subhead_string_x_y[0],
 						xanchor = 'left',
 						yref="paper",
-				   		y=0.08, 
+				   		y= subhead_string_x_y[1], 
+						yanchor = 'top',
+				   		showarrow=False,
+						align = 'left',
+						)
+
+		bottom_string = 'Ratings as on Sep 4, 2022. Image: ' + bottom_string_dict[genre]
+
+		fig.add_annotation(
+						text=bottom_string,
+						font=dict(
+								color="black",
+								size = bottom_string_font_size,
+								family = font_family,
+								),
+				  		xref="paper", 
+						x= bottom_string_x_y[0],
+						xanchor = 'left',
+						yref="paper",
+				   		y= bottom_string_x_y[1], 
 						yanchor = 'middle',
 				   		showarrow=False,
 						align = 'left',
@@ -194,27 +233,28 @@ def create_charts():
 						pad=0
 					),
 			title = dict(
-					text = genre,
+					text = ('<b>Best Music Service in India — ' + genre + '<b>'),
 					font = dict(
 							color='black', 
 							size=chart_title_font_size,
 							family=font_family,
 							),
-					x = 0.5,
-					xanchor = 'center',
+					x = title_x_y[0],
+					xanchor = 'left',
 					xref = 'container', #the option 'paper' is for the smaller plotting area, 'container' is for the larger plot
-					y = 0.97,
+					y = title_x_y[1],
 					yanchor = 'top',
 					yref = 'container', 
 					),
 			paper_bgcolor=graphic_bg_color,
 			)
 
-		img_path = 'assets/' + genre + '.webp'
+
+		img_path = root / ('assets/' + genre_fragment + '_blog.webp')
 		fig.write_image(img_path, format='webp', scale=2)
 
 		#crop 12 pixels from the right side
-			# extra 12 px margin in plotly image
+			# for some reason those 12 px are blank in plotly
 			# couldnt figure out how to get rid of it in plotly itself
 		pixels_to_cut = 12
 		crop_image_width = 1600 - pixels_to_cut
@@ -223,4 +263,6 @@ def create_charts():
 		cropped_image.save(img_path)
 
 
-create_charts()
+input_csv_path = root / 'data/analysis/genre_wise_out_of_10.csv'
+
+create_genre_charts(input_csv_path)

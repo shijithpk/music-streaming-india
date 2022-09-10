@@ -6,7 +6,7 @@ session = create_session()
 headersx = headers_wynk.headers
 paramsx = headers_wynk.params
 
-def find_matches_wynk(albums_df, csv_name, min_matched, min_checked, min_combos, threshold):
+def find_matches_wynk(albums_df, csv_name, min_matched, min_checked, min_combos):
 
 	albums_df_copy = albums_df.copy(deep=True)
 	for index,row in albums_df_copy.iterrows():
@@ -52,7 +52,13 @@ def find_matches_wynk(albums_df, csv_name, min_matched, min_checked, min_combos,
 				level_of_title_match = max(
 					get_elkan_score_jarowink(title, search_title),
 					get_elkan_score_jarowink(search_title, title))
-				if level_of_title_match < threshold: continue
+				# try:
+				# 	title_threshold =\
+				# 			100*((len(tokenize(title))-1)/len(tokenize(title)))
+				# except:
+				# 	title_threshold = 85
+				title_threshold = 85
+				if level_of_title_match < title_threshold: continue
 				url_fragment = album['id']
 				search_title_url = "https://wynk.in/music/album/" + url_fragment
 				if search_title_url in albums_checked: continue
@@ -68,8 +74,14 @@ def find_matches_wynk(albums_df, csv_name, min_matched, min_checked, min_combos,
 				level_of_artist_match = max(
 					get_elkan_score_jarowink(artist, search_artist),
 					get_elkan_score_jarowink(search_artist, artist))
+				# try:
+				# 	artist_threshold =\
+				# 			100*((len(tokenize(artist))-1)/len(tokenize(artist)))
+				# except:
+				# 	artist_threshold = 85
+				artist_threshold = 85
 				if 'various' not in artist.lower():
-					if level_of_artist_match < threshold:
+					if level_of_artist_match < artist_threshold:
 						continue				
 				if search_title_url in albums_matched: continue
 				albums_matched.add(search_title_url)

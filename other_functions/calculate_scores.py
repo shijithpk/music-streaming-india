@@ -1,11 +1,13 @@
 import numpy as np 
 import pandas as pd 
 import copy
+from pathlib import Path
 
-def calculate_scores(file_path):
+root = Path(__file__).parent.parent
 
-	expanded_grid_csv_path = file_path
-	expanded_grid_df = pd.read_csv(expanded_grid_csv_path,  dtype = str, index_col='index')
+def calculate_scores(input_csv_path):
+
+	expanded_grid_df = pd.read_csv(input_csv_path,  dtype = str, index_col='index')
 
 	service_list = ['amazon','apple','gaana','hungama',
 					'jiosaavn','spotify','wynk','ytmusic']
@@ -48,11 +50,11 @@ def calculate_scores(file_path):
 						(expanded_grid_df[relevant_column_name].notnull())].shape[0]
 						new_df.loc[((new_df['genre'] == list_name) & (new_df['category'] == category)), service] = service_genre_category_count
 
-	new_df.to_csv('data/analysis/intermediate_file_01.csv', encoding='utf-8', index=False)
+	new_df.to_csv(root / 'data/analysis/intermediate_file_01.csv', encoding='utf-8', index=False)
 
 	########################################################################
 
-	new_df = pd.read_csv('data/analysis/intermediate_file_01.csv')
+	new_df = pd.read_csv(root / 'data/analysis/intermediate_file_01.csv')
 
 	service_list = ['amazon','apple','gaana','hungama',
 					'jiosaavn','spotify','wynk','ytmusic']
@@ -64,11 +66,11 @@ def calculate_scores(file_path):
 	columns_to_drop = service_list + ['total']
 	new_df.drop(columns=columns_to_drop, axis=1, inplace=True)
 
-	new_df.to_csv('data/analysis/intermediate_file_02.csv', encoding='utf-8', index=False)
+	new_df.to_csv(root / 'data/analysis/intermediate_file_02.csv', encoding='utf-8', index=False)
 
 	#######################################################################
 
-	old_df = pd.read_csv('data/analysis/intermediate_file_02.csv')
+	old_df = pd.read_csv(root / 'data/analysis/intermediate_file_02.csv')
 
 	service_list = ['amazon','apple','gaana','hungama',
 					'jiosaavn','spotify','wynk','ytmusic']
@@ -92,12 +94,12 @@ def calculate_scores(file_path):
 			combined_percent = canon_percent + contemp_percent
 			new_df.loc[index, new_column_name] = combined_percent
 
-	new_df.to_csv('data/analysis/intermediate_file_03.csv', encoding='utf-8', index=False)
+	new_df.to_csv(root / 'data/analysis/intermediate_file_03.csv', encoding='utf-8', index=False)
 
 	########################################################################
 
 
-	old_df = pd.read_csv('data/analysis/intermediate_file_03.csv')
+	old_df = pd.read_csv(root / 'data/analysis/intermediate_file_03.csv')
 
 	service_list = ['amazon','apple','gaana','hungama',
 					'jiosaavn','spotify','wynk','ytmusic']
@@ -118,11 +120,11 @@ def calculate_scores(file_path):
 
 	new_df = old_df.set_index('genre').T.rename_axis('service').rename_axis(None, axis=1).reset_index()
 
-	new_df.to_csv('data/analysis/genre_wise_out_of_10.csv', encoding='utf-8', index=False)
+	new_df.to_csv(root / 'data/analysis/genre_wise_out_of_10.csv', encoding='utf-8', index=False)
 
 	#######################################################################
 
-	old_df = pd.read_csv('data/analysis/intermediate_file_03.csv')
+	old_df = pd.read_csv(root / 'data/analysis/intermediate_file_03.csv')
 
 	index_list = old_df[(old_df['genre'] == 'Rolling_Stone_500') |\
 						(old_df['genre'] == 'NME_500')].index
@@ -145,7 +147,7 @@ def calculate_scores(file_path):
 	############################################################
 
 
-	old_df = pd.read_csv('data/analysis/intermediate_file_03.csv')
+	old_df = pd.read_csv(root / 'data/analysis/intermediate_file_03.csv')
 
 	old_df.set_index('genre')
 
@@ -161,9 +163,38 @@ def calculate_scores(file_path):
 
 	old_df.drop(columns=columns_to_drop, axis=1, inplace=True)
 
-	old_df.to_csv('data/analysis/genre_wise_average.csv', encoding='utf-8', index=False)
+	old_df.to_csv(root / 'data/analysis/genre_wise_average.csv', encoding='utf-8', index=False)
+
+	############################################################
+
+	service_list = ['amazon','apple','gaana','hungama',
+					'jiosaavn','spotify','wynk','ytmusic']
+
+	expanded_grid_df = pd.read_csv(input_csv_path, dtype = str, 
+															index_col='index')
+
+	for listx in ['Rolling_Stone_500','NME_500']:
+		expanded_grid_df_culled =\
+			expanded_grid_df[expanded_grid_df['list_name'].str.contains(listx)]
+		
+		new_df = pd.DataFrame({'service': service_list})
+
+		for index, row in new_df.iterrows():
+			service = row['service']
+			service_col_name = 'matched_url_' + service 
+			expanded_grid_df_service =\
+				expanded_grid_df_culled[expanded_grid_df_culled[service_col_name].notnull()]
+			insertion_value = len(expanded_grid_df_service)
+			new_df.loc[index, 'out_of_500'] = insertion_value
+
+		new_df_sorted = new_df.sort_values(by=['out_of_500'], ascending=False)
+		save_path = root / ('data/analysis/' + listx + '_available.csv')
+		new_df_sorted.to_csv(save_path, encoding='utf-8', index=False)
 
 
 ########## RUN THE FUNCTION #######################
 
-calculate_scores('data/match_grid_expanded_aug_06_with_rights_holder_final.csv')
+input_csv_path =\
+	root/'data/match_grid_expanded_sep_04_with_rights_holder_final.csv'
+calculate_scores(input_csv_path)
+

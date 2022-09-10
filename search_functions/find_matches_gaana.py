@@ -8,7 +8,7 @@ headers_gaana_path = 'creds_headers/headers_gaana.json'
 with open(headers_gaana_path) as json_file:
 	headers_gaana = json.load(json_file)
 
-def find_matches_gaana(albums_df, csv_name, min_matched, min_checked, min_combos, threshold):
+def find_matches_gaana(albums_df, csv_name, min_matched, min_checked, min_combos):
 
 	albums_df_copy = albums_df.copy(deep=True)
 	for index,row in albums_df_copy.iterrows():
@@ -53,11 +53,23 @@ def find_matches_gaana(albums_df, csv_name, min_matched, min_checked, min_combos
 				level_of_title_match = max(
 					get_elkan_score_jarowink(title, search_title),
 					get_elkan_score_jarowink(search_title, title))
-				if level_of_title_match < threshold: continue
+				# try:
+				# 	title_threshold =\
+				# 			100*((len(tokenize(title))-1)/len(tokenize(title)))
+				# except:
+				# 	title_threshold = 85
+				title_threshold = 85
+				if level_of_title_match < title_threshold: continue
 				time_sleep(12,18)
 				# visiting webpage of album to get artist name
-				album_page = session.get(search_title_url, 
-									headers = headers_gaana)
+				try:
+					album_page = session.get(search_title_url, 
+										headers = headers_gaana)
+				except:
+					print('redo search|' + 'gaana|' + csv_index + '|' + keywords)
+					time_sleep(12,18)
+					continue
+				
 				treex = lxml_html.fromstring(album_page.content)
 
 				album_active_list = treex.xpath("//li[contains(text(),'Album is inactive')]")
@@ -84,8 +96,14 @@ def find_matches_gaana(albums_df, csv_name, min_matched, min_checked, min_combos
 				level_of_artist_match = max(
 					get_elkan_score_jarowink(artist, search_artist),
 					get_elkan_score_jarowink(search_artist, artist))
+				# try:
+				# 	artist_threshold =\
+				# 			100*((len(tokenize(artist))-1)/len(tokenize(artist)))
+				# except:
+				# 	artist_threshold = 85
+				artist_threshold = 85
 				if 'various' not in artist.lower():
-					if level_of_artist_match < threshold:
+					if level_of_artist_match < artist_threshold:
 						continue				
 				if search_title_url in albums_matched: continue
 				albums_matched.add(search_title_url)

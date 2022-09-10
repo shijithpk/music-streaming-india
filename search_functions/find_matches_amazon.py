@@ -5,7 +5,7 @@ session = create_session()
 
 headers_amazonx = headers_amazon.headers_amazon
 
-def find_matches_amazon(albums_df, csv_name, min_matched, min_checked, min_combos, threshold):
+def find_matches_amazon(albums_df, csv_name, min_matched, min_checked, min_combos):
 	'''
 	Takes in the dataframe of album titles & artists.
 	Finds matches for them if any on spotify.
@@ -89,12 +89,24 @@ def find_matches_amazon(albums_df, csv_name, min_matched, min_checked, min_combo
 					level_of_artist_match =\
 						max(get_elkan_score_jarowink(artist, search_artist),
 							get_elkan_score_jarowink(search_artist, artist))
+					# try:
+					# 	title_threshold =\
+					# 		100*((len(tokenize(title))-1)/len(tokenize(title)))
+					# except:
+					# 	title_threshold = 85
+					# try:
+					# 	artist_threshold =\
+					# 		100*((len(tokenize(artist))-1)/len(tokenize(artist)))
+					# except:
+					# 	artist_threshold = 85
+					title_threshold = 85
+					artist_threshold = 85
 					if 'various' in artist.lower():
-						if (level_of_title_match < threshold):
+						if (level_of_title_match < title_threshold):
 							continue
 					else:
-						if ((level_of_title_match < threshold) or
-							(level_of_artist_match < threshold)):
+						if ((level_of_title_match < title_threshold) or
+							(level_of_artist_match < artist_threshold)):
 							continue
 					if search_title_url in albums_matched: continue
 					albums_matched.add(search_title_url)

@@ -1,50 +1,60 @@
 import pandas as pd
 import copy
 import numpy as np
+from pathlib import Path
+import sys
+
+root = Path(__file__).parent.parent
+sys.path.append(str(root))
+
 from search_functions import *
+
 
 # BELOW AM REMOVING MATCHES
 
-expanded_grid_csv_path = 'data/match_grid_expanded_aug_4_after_insertion.csv'
-expanded_grid_df = pd.read_csv(expanded_grid_csv_path, dtype = str, index_col='index')
+# defining function
+def remove_matches(	expanded_grid_csv_path,
+					removal_csv_path,
+					save_path
+					):
+	expanded_grid_df = pd.read_csv(expanded_grid_csv_path, dtype = str, 
+															index_col='index')
+	removal_df =  pd.read_csv(removal_csv_path, dtype = str, index_col='index')
 
-removal_csv_path = 'data/for_manual_removal_2022_08_06.csv'
-removal_df =  pd.read_csv(removal_csv_path, dtype = str, index_col='index')
+	# columns in removal_df are [index, target_url]
 
-# columns in removal_df are [index, target_url]
+	service_dict = {
+	'apple': { 'domain': 'apple'},
+	'jiosaavn': { 'domain': 'jiosaavn'},
+	'spotify': { 'domain': 'spotify'},
+	'ytmusic': { 'domain': 'youtube'},
+	'amazon': { 'domain': 'amazon'},
+	'gaana': { 'domain': 'gaana'},
+	'hungama': { 'domain': 'hungama'},
+	'wynk': { 'domain': 'wynk'},
+	}
 
-# service_list = ['amazon','apple','gaana',
-# 				'hungama',
-# 				'jiosaavn','spotify','wynk','ytmusic']
+	all_cols = expanded_grid_df.columns.values.tolist()
 
-service_dict = {
-'apple': { 'domain': 'apple'},
-'jiosaavn': { 'domain': 'jiosaavn'},
-'spotify': { 'domain': 'spotify'},
-'ytmusic': { 'domain': 'youtube'},
-'amazon': { 'domain': 'amazon'},
-'gaana': { 'domain': 'gaana'},
-'hungama': { 'domain': 'hungama'},
-'wynk': { 'domain': 'wynk'},
-}
+	for index, row in removal_df.iterrows():
+		target_url = row['target_url']
+		for service in service_dict:
+			if service_dict[service]['domain'] in target_url:
+				cols_for_removal = [x for x in all_cols if service in x]
+				for col in cols_for_removal:
+					expanded_grid_df.at[index, col] = np.nan
+
+	expanded_grid_df.to_csv(save_path, encoding='utf-8')
+
+# setting paths
+expanded_grid_csv_path = root/'data/match_grid_expanded_aug_06_with_rights_holder_final.csv'
+removal_csv_path = root/'data/for_manual_removal_2022_09_01.csv'
+save_path = root/'data/match_grid_expanded_sep_02_after_removal.csv'
+
+# running function 
+remove_matches(	expanded_grid_csv_path,
+					removal_csv_path,
+					save_path
+					)
 
 
-for index, row in removal_df.iterrows():
-	target_url = row['target_url']
-	for service in service_dict:
-		if service_dict[service]['domain'] in target_url:
-			artist_col_name_grid_df = 'matched_artist_' + service
-			title_col_name_grid_df = 'matched_title_' + service
-			url_col_name_grid_df = 'matched_url_' + service
-
-			expanded_grid_df.at[index, artist_col_name_grid_df] = np.nan
-			expanded_grid_df.at[index, title_col_name_grid_df] = np.nan
-			expanded_grid_df.at[index, url_col_name_grid_df] = np.nan
-
-new_expanded_grid_csv_path = 'data/match_grid_expanded_aug_6_after_removal.csv'
-expanded_grid_df.to_csv(new_expanded_grid_csv_path, encoding='utf-8')
-
-print('done and done')
-
-# line for cron jobs
-# cd /home/ubuntu/work/2022_03_17_music_app_remote && stdbuf -o0 -e0 /usr/bin/python3 ./manual_removal.py >> /home/ubuntu/work/2022_03_17_music_app_remote/responses_logs/cron_logs/`date +\%Y-\%m-\%d-\%H:\%M`-manual_removal-cron.log 2>&1

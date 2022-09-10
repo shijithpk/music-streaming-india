@@ -86,5 +86,3 @@ for item in ngram_sorted:
 
 print('done and done')
 
-# line for cron jobs
-# cd /home/ubuntu/work/2022_03_17_music_app_remote && stdbuf -oL -eL /usr/bin/python3 ./get_ngram_distribution_v2.py >> /home/ubuntu/work/2022_03_17_music_app_remote/responses_logs/cron_logs/`date +\%Y-\%m-\%d-\%H:\%M`-ngram-dist-cron.log 2>&1

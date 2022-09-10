@@ -11,8 +11,8 @@ headers_specific_album = headers_hungama_brute.headers_specific_album
 params_specific_album = headers_hungama_brute.params_specific_album
 
 def collect_album_results(albums_df, save_csv_name, albums_processed_csv_name, 
-													min_checked, min_combos, 
-													threshold, folder_path):
+													min_checked, min_combos,
+													folder_path):
 
 	if not os.path.exists(folder_path):
 		os.makedirs(folder_path)
@@ -101,7 +101,13 @@ def collect_album_results(albums_df, save_csv_name, albums_processed_csv_name,
 					level_of_title_match = max(
 						get_elkan_score_jarowink(title, search_title),
 						get_elkan_score_jarowink(search_title, title))
-					if level_of_title_match < threshold: continue
+					# try:
+					# 	title_threshold =\
+					# 		100*((len(tokenize(title))-1)/len(tokenize(title)))
+					# except:
+					# 	title_threshold = 85
+					title_threshold = 85
+					if level_of_title_match < title_threshold: continue
 					row_list = [index, artist, title, genre, search_title, 
 								search_title_url]
 					with open(save_csv_path, "a") as filen:
@@ -243,7 +249,7 @@ def collect_artist_names(load_csv_name, save_csv_name, folder_path):
 			filen.flush()
 
 
-def collect_matches(albums_df, load_csv_name, save_csv_name, min_matched, threshold, folder_path):
+def collect_matches(albums_df, load_csv_name, save_csv_name, min_matched, folder_path):
 	albums_df_copy = albums_df.copy(deep=True)
 	load_csv_filepath = folder_path + load_csv_name
 	collected_albums_artists_df = pd.read_csv(load_csv_filepath, dtype = str, 
@@ -276,19 +282,39 @@ def collect_matches(albums_df, load_csv_name, save_csv_name, min_matched, thresh
 					get_elkan_score_jarowink(search_artist, artist))
 			index_df.loc[index,'level_of_title_match'] = level_of_title_match
 			index_df.loc[index,'level_of_artist_match'] = level_of_artist_match
+
+			# try:
+			# 	title_threshold =\
+			# 		100*((len(tokenize(title))-1)/len(tokenize(title)))
+			# except:
+			# 	title_threshold = 85
+			# try:
+			# 	artist_threshold =\
+			# 		100*((len(tokenize(artist))-1)/len(tokenize(artist)))
+			# except:
+			# 	artist_threshold = 85
+			title_threshold = 85
+			artist_threshold = 85
+
+			index_df.loc[index,'title_threshold'] = title_threshold
+			index_df.loc[index,'artist_threshold'] = artist_threshold
+
 		
 		if ('various' in artistx.lower()) or ('artists' in artistx.lower()):
 			#actually dont need line below, all title match scores are >threshold anyway
 				#keeping it in so logic is clear, do need line about sorting though
 			index_df_title_over_threshold =\
-				index_df[(index_df['level_of_title_match'] >= threshold)]
+				index_df[(index_df['level_of_title_match'] >=\
+								 index_df['title_threshold'])]
 			index_df_title_over_threshold.sort_values(by=['level_of_title_match'], 
 				ascending=False, inplace=True)
 			index_df_top = index_df_title_over_threshold[0:min_matched]
 		else:
 			index_df_over_threshold =\
-				index_df[(index_df['level_of_title_match'] >= threshold) & 
-						(index_df['level_of_artist_match'] >= threshold)]
+				index_df[(index_df['level_of_title_match'] >=\
+							 index_df['title_threshold']) & 
+						(index_df['level_of_artist_match'] >=\
+							 index_df['artist_threshold'])]
 			index_df_over_threshold.sort_values(by=['level_of_artist_match',
 				 'level_of_title_match'], ascending=False, inplace=True)
 			index_df_top = index_df_over_threshold[0:min_matched]
@@ -308,7 +334,7 @@ def collect_matches(albums_df, load_csv_name, save_csv_name, min_matched, thresh
 
 
 def find_matches_hungama(albums_df, save_csv_name, albums_processed_csv_name, 
-		min_matched, min_checked, min_combos, threshold, folder_path):
+		min_matched, min_checked, min_combos, folder_path):
 
 	# # UNCOMMENT AFTER ROUND 8 
 	# for_hungama_files_list = os.listdir(folder_path)
@@ -347,7 +373,7 @@ def find_matches_hungama(albums_df, save_csv_name, albums_processed_csv_name,
 		collect_artist_names('collected_albums.csv', 'collected_artist_names.csv', folder_path)
 
 	collect_matches(albums_df, 'collected_artist_names.csv', 
-					save_csv_name, min_matched, threshold, folder_path)
+					save_csv_name, min_matched, folder_path)
 
 
 def playable_on_hungama(album_url):

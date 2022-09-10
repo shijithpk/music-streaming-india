@@ -61,12 +61,25 @@ def find_matches_apple(albums_df, csv_name, min_matched, min_checked, min_combos
 					level_of_artist_match = max(
 						get_elkan_score_jarowink(artist, search_artist),
 						get_elkan_score_jarowink(search_artist, artist))
+					# try:
+					# 	title_threshold =\
+					# 		100*((len(tokenize(title))-1)/len(tokenize(title)))
+					# except:
+					# 	title_threshold = 85
+					# try:
+					# 	artist_threshold =\
+					# 		100*((len(tokenize(artist))-1)/len(tokenize(artist)))
+					# except:
+					# 	artist_threshold = 85
+					title_threshold = 85
+					artist_threshold = 85
+
 					if 'various' in artist.lower():
-						if (level_of_title_match < 85):
+						if (level_of_title_match < title_threshold):
 							continue
 					else:
-						if ((level_of_title_match < 85) or
-							(level_of_artist_match < 85)):
+						if ((level_of_title_match < title_threshold) or
+							(level_of_artist_match < artist_threshold)):
 							continue
 					if search_title_url in albums_matched: continue
 					albums_matched.add(search_title_url)

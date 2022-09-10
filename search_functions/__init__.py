@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/python3
 
 from .helpers import *
 from .find_matches_spotify import *
