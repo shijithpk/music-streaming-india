@@ -50,7 +50,7 @@ Then based on how many albums in the dataset a service has got, we calculate rat
 
 I care about reproducibility of results, but unfortunately here, the final scores can't be reproduced by others because of how many rounds of searching i've done (upto 7) and the numerous manual interventions I've had to make. 
 
-Once you set up the [credentials and headers](creds_headers) (Cookies, device id etc. need to be filled in), you could technically run [main.py](main.py), and it'll be done with everything in a week. All the scripts are listed in the order it should be run, with comments explaining what each of them do. 
+Once you set up the [credentials and headers](creds_headers) (Cookies, device id etc. need to be filled in), you could technically run [main.py](main.py), and it'll be done with everything in a week. All the scripts are listed in the order it should be run, with comments explaining what each of them do. But like I said, you won't get the same results I did.
 
 I'll be honest, a lot of my code isn't done the way professionals would (I don't use classes etc.), so I'm probably the only person who'll be able to make sense of all this code. But hopefully, by making all of this available in public, and being transparent about the various steps I've taken, there'll be more confidence in the validity of my results.
 
