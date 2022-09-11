@@ -54,5 +54,6 @@ Once you set up the [credentials and headers](creds_headers) (Cookies, device id
 
 I'll be honest, a lot of my code isn't done the way professionals would (I don't use classes etc.), so I'm probably the only person who'll be able to make sense of all this code. But hopefully, by making all of this available in public, and being transparent about the various steps I've taken, there'll be more confidence in the validity of my results.
 
-### Suggestions, feedback
-If you have any suggestions, please contact me on mail@shijith.com or my twitter handle [@shijith](https://twitter.com/shijith). Have a great day! :)
+### Want to hire me?
+
+I've been on a pandemic break, but with this project over, I'm ready to get back to full-time work. Have a look at [my website](https://shijith.com/). If you like what I've done and think I could be of value to your company, email me at [mail@shijith.com](mailto:mail@shijith.com) or message me on [LinkedIn](https://www.linkedin.com/in/shijith/). I may not make sense for a developer role, but for something that combines coding and communication skills, I could be a good fit for that.
