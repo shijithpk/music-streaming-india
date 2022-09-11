@@ -1,50 +1,58 @@
 ### About the repo
 
-This repo contains code for my analysis of how well streaming services in India cover western music. The report is available on [my blog](http://shijith.com/blog/2022-07-26-music-streaming-india/). 
+This repo contains code for an analysis of how well streaming services in India cover western music. The report is available on [my blog](https://shijith.com/blog/music-streaming-india/). 
 
 The code here may not allow you to fully reproduce my results, because there were many manual steps in addition to all the work done programatically, but it should give anyone interested a glimpse of how I went about doing this project.
 
 ### The goal
 
-The aim of the analysis was to find which streaming services cover western msuic best. To do this, we came up with a list of albums across several genres Pop, Rock etc. and tried to see which of these services have it in India. These lists cover alums that are seen as the best of all time in a particular genre according to critics. Acclaimed albums from the past 10 years were also taken. Then according to how many albums were available, each service was given a rating out of 10.
+The aim of the analysis was to find which streaming services cover western music best. To do this, I came up with a list of albums across several genres Pop, Rock etc., and tried to see how many albums on that list does each service have in India. 
+
+These lists cover albums that are seen as the best of all time in a particular genre, and acclaimed albums from the past 10 years were also taken. Then, based on how many albums were available, each service was given a rating out of 10.
+
+![Overall Ratings](assets/overall_ratings_blog.webp)
 
 ### The datasets 
 
-The raw dataset XXGIVE INTERNAL LINKXX contains all the albums we were searching for, their genres as well as the time period (canon|contemporary) they represent.
-The final dataset XXGIVE INTERNAL LINKXX gives all the album urls captured programatically and manually on different services that match our albums. 
-Source_list XXGIVE INTERNAL LINKXX gives the website urls of all the album lists used from reputable music publications and websites.
+The [raw dataset](data/all_data_v14.csv) contains all the albums we were searching for, their genres as well as the time period (canon|contemporary) they represent.
+The [final dataset](data/match_grid_expanded_sep_04_with_rights_holder_final.csv) gives all the album urls captured programatically and manually on different services that match our albums. 
+The [source_list](data/source_list.csv) gives the source urls of all the album lists used from reputable music publications and websites.
 
 ### The code 
 
-The script main.py XXGIVE INTERNAL LINKXX is the one that's run to search for albums. It corrals functions in the search_functions folder and runs them in parallel to do the job. For example, if you look at find_matches_spotify.py, there's the main function that searches for albums and stores them in a csv, there's one function that checks if an album is playable in India or not, 
+The script [main.py](main.py) is the one that's run to search for albums. It corrals functions in the [search_functions](search_functions) folder and runs them in parallel to do the job. For example, to search on Spotify, the [find_matches_spotify.py](search_functions/find_matches_spotify.py) has a function to search for album urls and store them in a csv.
 
- There are several other functions that are listed in the other_functions XXGIVE LINKXX folder. The search_functions folder XXGIVE LINKXX has the functions that query different music services and find matches for the albums in our dataset.
+There are several other functions listed in the [other_functions](other_functions) folder. Many of these functions are used to see if albums found are playable in India, who the rights holders are, calculate the final ratings and so on.
 
-## How it all works 
+### How it all works 
 
-Essentially, I run main.py . What this does first is go to the dataset XXLINK all_data_v14.csv XX , then for each album in the dataset tries o find matches across the services. It does this by running search functions like find_matches_amazon, find_matches_apple in parallel. 
+Essentially, I run main.py , and let it do its thing. What this does first is go to the [raw dataset](data/all_data_v14.csv), then for each album in the dataset tries to find matches across the services. It does this by running searches on different services in parallel. 
 
-It collects upto 5 matches for each album. (Collects multiple matches because our selection criteria are set loosely at first, to allow for the possibility of false positives. The title, artist and url of the album is stored.
+It collects upto 5 matches for each album. Multiple matches are collected because our selection criteria are deliberately set loosely at first, to allow for the possibility of false positives. The title, artist and url of the album is stored.
 
-Just to go deep into the details for a moment, an album is seen as a possible match if the words in our source album title and source artist name are a subset of the target album title and target artist name. So if we're searching for matches, for say, 'Ok Computer' by Radiohead and we come across an album "OK Computer OKNOTOK 1997 2017" by Radiohead on YouTube Music, that's seen as a possible match and stored.
+Just to go deep into the details for a moment, an album is seen as a possible match if the words in our source album title and source artist name are a subset of the target album title and target artist name. (The subset-iness is determined according to the [Monge-Elkan](https://anhaidgroup.github.io/py_stringmatching/v0.4.x/MongeElkan.html) measure.)
 
-Scores are then given to each of the 5 matches collected based on an algorithm called Generalised Jaccard XXGIVE LINK TO SLIDESHOW PDF EXACT PAGEXX. Basically, this looks not just at subset-iness, how many terms from our source string are there in target string, but also reduces the score for how many terms extra there are in the target string. The script GIVE_NAME XXX GIVE_LINK XX helps assign the generalised jaccard scores.
+So if we're searching for matches, for say, 'Ok Computer' by Radiohead and we come across an album "OK Computer OKNOTOK 1997-2017" by Radiohead on YouTube Music, that's seen as a possible match and stored. 
 
-You could go by whichever album got the highest score according to the generalised jaccard algorithm and move on to the next step, but I chose to manually check them as well, by printing out the various matches with the help of the script XX GIVE NAME GIVE LINK XX and we then note the correct matches if any.
+Scores are then given to each of the 5 matches collected based on a [Generalised Jaccard](https://anhaidgroup.github.io/py_stringmatching/v0.4.x/GeneralizedJaccard.html) measure. Basically, this looks not just at subset-iness, ie. how many terms from our source string are there in target string, but also reduces the score for how many terms extra there are in the target string. The script [other_functions/insert_genjacc_scores.py](other_functions/insert_genjacc_scores.py) helps calculate these generalised jaccard scores.
 
-Also, for albums that haven't got any matches, you could do another round of searching on the various services. I also did one round where I looked at album matches given by Google with the help of XX GIVE SCRIPT NAME GIVE LINK SCRIPT. What happens is whey you search the name of an album and its artist in google, they have an info box on the side with links to the album on the various services. Some of these work, some of them don't, and many times in the case of apple link to the albums on the US website when they may not be available in India. Here again, links were stored and gone through manually to see if they were actual matches or not. 
+You could go by whichever album got the highest score according to the generalised jaccard algorithm and move on to the next step, but I chose to manually check them as well, by printing out the various matches with the help of [this script](other_functions/create_txt_false_pos_check.py) and confirming the correct matches.
 
-Then based on how many albums in the dataset a service has got, we calculate ratings for each genre and overall ratings using the script calculate_scores.py XXGIVE LINKXX
+Also, for albums that haven't got any matches, you could do another round of searching on the various services. I did one round where I looked at album matches given by Google with the help of [this script](other_functions/download_google_results.py). What happens is when you search the name of an album and its artist in Google, they have an info box on the side with links to the album on the various services. 
 
-I care about reproducibility of results, but unfortunately here, the final scores can't be reproduced by others because of how many rounds of searching i've done (upto 7) and the numerous manual interventions I've had to do/make/ALT. But hopefully making publicly available all the code I've used and being transparent about the various steps I've taken will allay/SIMPLER_CONVERSATIONAL_WORD concerns about the validity of the results.
+![Overall Ratings](assets/google_screenshot.webp)
 
-One script online_check.py XXGIVE LINKXX was used to check which albums had at least 80% of their tracks playable. The problem with some of the albums is that because of some rights or legal issue, not all of the tracks would be playable, some would be grayed out. This script checks if at least 80% of the tracks on an album are playable, and if they aren't, it was marked as not available on a service and removed from the matches. Ideally, all tracks should be available, but 80% is an acceptable minimum threshold.
+A lot of those links surfaced by Google work, some of them happen to be links to the album on the US website so they may not be available in India. Here again, links were stored and gone through manually to see if they were actual matches or not.
 
-Other scripts like find_label_info, choose_rights_holder, guess_label_tieup are about trying to figure out which corporate music group holds the rights for an album.
+Then based on how many albums in the dataset a service has got, we calculate ratings for each genre and overall ratings using the script [calculate_scores.py](other_functions/calculate_scores.py).
 
-Made use of copyright info that's displayed on each page and lists of subsidiaries available on the Universal, Sony Music websites etc. to come up with label_groupings.py XXGIVE LINKXX. This is then used by the find_rights_holder_v3.py XXGIVE LINK XX script to make a best effort guess. 
+### Results not reproducible :(
 
-This then helps determine which of the majors -- Universal, Sony, Warner etc. -- a music service will have to make deals with, or expand existing deals, to improve their genre-wise and overall ratings, ie. their coverage of critically-acclaimed music.
+I care about reproducibility of results, but unfortunately here, the final scores can't be reproduced by others because of how many rounds of searching i've done (upto 7) and the numerous manual interventions I've had to make. 
+
+Once you set up the [credentials and headers](creds_headers) (Cookies, device id etc. need to be filled in), you could technically run [main.py](main.py), and it'll be done with everything in a week. All the scripts are listed in the order it should be run, with comments explaining what each of them do. 
+
+I'll be honest, a lot of my code isn't done the way professionals would (I don't use classes etc.), so I'm probably the only person who'll be able to make sense of all this code. But hopefully, by making all of this available in public, and being transparent about the various steps I've taken, there'll be more confidence in the validity of my results.
 
 ### Suggestions, feedback
-I'm not a professional developer, so am sure there are things here I should be doing differently. If you have any suggestions, please contact me on mail@shijith.com or my twitter handle [@shijith](https://twitter.com/shijith).  
+If you have any suggestions, please contact me on mail@shijith.com or my twitter handle [@shijith](https://twitter.com/shijith). Have a great day! :)
