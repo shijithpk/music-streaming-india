@@ -56,4 +56,4 @@ I'll be honest, a lot of my code isn't done the way professionals would (I don't
 
 ### Want to hire me?
 
-I've been on a pandemic break, but with this project over, I'm ready to get back to full-time work. Have a look at [my website](https://shijith.com/). If you like what I've done and think I could be of value to your company, email me at [mail@shijith.com](mailto:mail@shijith.com) or message me on [LinkedIn](https://www.linkedin.com/in/shijith/). I may not make sense for a developer role, but for something that combines coding and communication skills, I could be a good fit for that.
+I've been on a pandemic break, but with this project over, I'm ready to get back to full-time work. Have a look at [my website](https://shijith.com/). If you like what I've done and think I could be of value to your company, email me at [mail@shijith.com](mailto:mail@shijith.com) or message me on [LinkedIn](https://www.linkedin.com/in/shijith/). I may not make sense for a developer role, but for something that combines coding and longform writing, I could be a good fit for that.
