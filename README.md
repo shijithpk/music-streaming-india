@@ -15,7 +15,7 @@ These lists cover albums that are seen as the best of all time in a particular g
 ### The datasets 
 
 The [raw dataset](data/all_data_v14.csv) contains all the albums we were searching for, their genres as well as the time period (canon|contemporary) they represent.
-The [final dataset](data/match_grid_expanded_sep_04_with_rights_holder_final.csv) gives all the album urls captured programatically and manually on different services that match our albums. 
+The [final dataset](data/match_grid_expanded_sep_04_USED_FOR_BLOGPOST.csv) gives all the album urls captured programatically and manually on different services that match our albums. 
 The [source_list](data/source_list.csv) gives the source urls of all the album lists used from reputable music publications and websites.
 
 ### The code 
