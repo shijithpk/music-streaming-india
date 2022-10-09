@@ -36,7 +36,7 @@ def choose_rights_holder(input_csv_path, output_csv_path):
 	raw_df.to_csv(output_csv_path, encoding='utf-8')
 
 
-input_csv_path = 'data/match_grid_expanded_sep_04_with_rights_holder_raw.csv'
-output_csv_path = 'data/match_grid_expanded_sep_04_with_rights_holder_final.csv'
+input_csv_path = 'data/match_grid_expanded_sep_27_after_jiosaavn_rights_holder_raw.csv'
+output_csv_path = 'data/match_grid_expanded_sep_27_after_jiosaavn_rights_holder_final.csv'
 
 choose_rights_holder(input_csv_path, output_csv_path)

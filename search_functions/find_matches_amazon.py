@@ -57,7 +57,7 @@ def find_matches_amazon(albums_df, csv_name, min_matched, min_checked, min_combo
 					results_dict = response.json()
 				except:
 					print('redo search|' + 'amazon|' + csv_index + '|' + keywords)
-					time_sleep(150,180)
+					time_sleep(21,25)
 					break
 				# nested try-except below covers different json response structures 
 				try:
@@ -68,7 +68,7 @@ def find_matches_amazon(albums_df, csv_name, min_matched, min_checked, min_combo
 						albums_list = results_dict['methods'][0]['items']
 					except:
 						print('redo search|' + 'amazon|' + csv_index + '|' + keywords)
-						time_sleep(150,180)
+						time_sleep(21,25)
 						break
 				# below is the 'got response, but no results condition' for amazon
 					# albums_list will be an empty list. So if empty, move on 

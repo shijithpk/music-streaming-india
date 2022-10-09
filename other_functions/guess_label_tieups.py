@@ -42,7 +42,7 @@ def guess_label_tieups(input_csv_path, output_csv_path):
 	new_df.to_csv(output_csv_path, encoding='utf-8', index=False)
 
 
-input_csv_path = 'data/match_grid_expanded_sep_04_with_rights_holder_final.csv'
+input_csv_path = 'data/match_grid_expanded_sep_27_after_jiosaavn_rights_holder_final.csv'
 output_csv_path = 'data/analysis/label_coverage.csv'
 
 guess_label_tieups(input_csv_path, output_csv_path)

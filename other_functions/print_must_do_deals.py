@@ -123,6 +123,6 @@ def print_must_do_deals(input_csv_path):
 			str(col_max_value) + ') to overall rating ' +\
 			'will come from doing a deal for ' + col_max_label)
 
-input_csv_path ='data/match_grid_expanded_sep_04_with_rights_holder_final.csv'
+input_csv_path ='data/match_grid_expanded_sep_23_wynk_update_rights_holder_final.csv'
 
 print_must_do_deals(input_csv_path)

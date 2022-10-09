@@ -26,7 +26,12 @@ def find_matches_jiosaavn(albums_df, csv_name, min_matched, min_checked, min_com
 				break
 			query = ' '.join(combo)
 			time_sleep(16,20)
-			album_list = searchAlbum(query) 
+			try:
+				album_list = searchAlbum(query) 
+			except:
+				print('redo search|' + 'jiosaavn|' + csv_index + '|' + keywords)
+				time_sleep(16,20)
+				continue
 			# below is 'got reponse, but no results' condition
 				# we get an empty list back. So if empty list, move on 
 			if not album_list: continue

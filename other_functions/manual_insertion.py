@@ -36,7 +36,7 @@ def insert_matches(expanded_grid_csv_path,
 		target_url = row['target_url']
 		for service in service_dict:
 			if service_dict[service]['domain'] in target_url:
-				time_sleep(10,15)
+				time_sleep(11,15)
 				try:
 					target_artist_title = service_dict[service]['function'](target_url,'')
 					target_artist = target_artist_title[0]
@@ -58,10 +58,13 @@ def insert_matches(expanded_grid_csv_path,
 
 
 # setting paths
-expanded_grid_csv_path = 'data/match_grid_expanded_sep_02_after_insertion.csv'
-insertion_csv_path = 'data/for_manual_insertion_2022_09_02.csv'
-save_path = 'data/match_grid_expanded_sep_02_after_insertion_v2.csv'
+expanded_grid_csv_path = 'data/match_grid_expanded_sep_23_wynk_update_rights_holder_final.csv'
+insertion_csv_path = 'data/for_manual_insertion_2022_09_27.csv'
+save_path = 'data/match_grid_expanded_sep_27_after_jiosaavn_insertion.csv'
+
+
 
 # running function 
 insert_matches(expanded_grid_csv_path, insertion_csv_path, save_path)
 
+# cd /home/ubuntu/work/2022_03_17_music_app_remote/ && stdbuf -o0 -e0 /usr/bin/python3 ./other_functions/manual_insertion.py >> /home/ubuntu/work/2022_03_17_music_app_remote/responses_logs/cron_logs/`date +\%Y-\%m-\%d-\%H:\%M`-manual-insertion-cron.log 2>&1

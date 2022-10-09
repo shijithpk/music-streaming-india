@@ -23,7 +23,12 @@ def find_matches_ytmusic(albums_df, csv_name, min_matched, min_checked, min_comb
 				break
 			query = ' '.join(combo)
 			time_sleep(16,20)
-			album_list = ytmusic.search(query, filter='albums')
+			try:
+				album_list = ytmusic.search(query, filter='albums')
+			except:
+				print('redo search|' + 'ytmusic|' + csv_index + '|' + keywords)
+				time_sleep(16,20)
+				continue
 			# below is 'got response, but no results' condition for yt music
 				# we get an empty list back 
 			if not album_list: continue

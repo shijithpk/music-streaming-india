@@ -69,15 +69,17 @@ service_dict = {
 'jiosaavn': { 'domain': 'jiosaavn', 'function': get_label_copyright_jiosaavn },
 'spotify': { 'domain': 'spotify', 'function': get_label_copyright_spotify },
 'amazon': { 'domain': 'amazon', 'function': get_label_copyright_amazon },
-# 'gaana': { 'domain': 'gaana', 'function': get_label_copyright_gaana },
+'gaana': { 'domain': 'gaana', 'function': get_label_copyright_gaana },
 'wynk': { 'domain': 'wynk', 'function': get_label_copyright_wynk },
 }
 
-input_csv_path = 'data/match_grid_expanded_sep_04_after_google_integration.csv'
-output_csv_path = 'data/match_grid_expanded_sep_04_with_label_info.csv'
+input_csv_path = 'data/match_grid_expanded_sep_27_after_jiosaavn_insertion.csv'
+output_csv_path = 'data/match_grid_expanded_sep_27_after_jiosaavn_label_info.csv'
 
 find_label_info(input_csv_path=input_csv_path, 
 				service_dict=service_dict, 
 				output_csv_path=output_csv_path
 				)
 
+
+# cd /home/ubuntu/work/2022_03_17_music_app_remote/ && stdbuf -o0 -e0 /usr/bin/python3 ./other_functions/find_label_info.py >> /home/ubuntu/work/2022_03_17_music_app_remote/responses_logs/cron_logs/`date +\%Y-\%m-\%d-\%H:\%M`-find-label-info-cron.log 2>&1

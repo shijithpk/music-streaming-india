@@ -52,16 +52,16 @@ def choose_genjacc_match(service_list, round_num):
 		df_for_saving.to_csv(filepath_dupli, encoding='utf-8')
 
 service_list = [
-				'amazon',
+				# 'amazon',
 				# 'apple',
 				# 'gaana',
 				# 'hungama',
-				# 'jiosaavn',
+				'jiosaavn',
 				# 'spotify',
 				# 'wynk',
-				# 'ytmusic',
+				'ytmusic',
 				]
 
-round_num = '09'
-choose_genjacc_match(service_list, round_num)
+round_num = '10'
 
+choose_genjacc_match(service_list, round_num)

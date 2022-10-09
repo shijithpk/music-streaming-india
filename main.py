@@ -20,7 +20,7 @@ service_dict = {
 orig_data_path = 'data/all_data_v14.csv'
 
 # for first run of code, put input_csv_path = None here
-input_csv_path = 'data/match_grid_expanded_sep_02_after_insertion.csv'
+input_csv_path = 'data/match_grid_expanded_sep_23_wynk_update_rights_holder_final.csv'
 
 
 def create_holding_dict(service_dict, orig_data_path, input_csv_path):
@@ -53,7 +53,7 @@ def create_holding_dict(service_dict, orig_data_path, input_csv_path):
 holding_dict = create_holding_dict(service_dict, orig_data_path, input_csv_path)
 
 #for first run put round_num = '01'
-round_num = '09'
+round_num = '10'
 
 # searching on services for albums that havent gotten a match
 with ThreadPoolExecutor(max_workers=8) as pool:

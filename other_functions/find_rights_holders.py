@@ -167,14 +167,14 @@ service_list = [
 				'amazon',
 				'jiosaavn',
 				'wynk',
-				# 'gaana',
+				'gaana',
 				]
 
 from data import label_groups
 label_dict = label_groups.label_dict
 
-input_csv_path = 'data/match_grid_expanded_sep_04_with_label_info.csv'
-output_csv_path = 'data/match_grid_expanded_sep_04_with_rights_holder_raw.csv'
+input_csv_path = 'data/match_grid_expanded_sep_27_after_jiosaavn_label_info.csv'
+output_csv_path = 'data/match_grid_expanded_sep_27_after_jiosaavn_rights_holder_raw.csv'
 
 find_rights_holders(input_csv_path=input_csv_path,
 					service_list=service_list, 

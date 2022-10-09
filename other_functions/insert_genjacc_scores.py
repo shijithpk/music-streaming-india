@@ -47,15 +47,16 @@ def insert_genjacc_score_columns(service_list, round_num):
 		partial_df.to_csv(partial_df_with_scores_path, encoding='utf-8')
 
 service_list = [
-				'amazon',
+				# 'amazon',
 				# 'apple',
 				# 'gaana',
 				# 'hungama',
-				# 'jiosaavn',
+				'jiosaavn',
 				# 'spotify',
 				# 'wynk',
-				# 'ytmusic',
+				'ytmusic',
 				]
 
-round_num = '09'
+round_num = '10'
+
 insert_genjacc_score_columns(service_list, round_num)

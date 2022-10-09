@@ -192,9 +192,80 @@ def calculate_scores(input_csv_path):
 		new_df_sorted.to_csv(save_path, encoding='utf-8', index=False)
 
 
+	############################################################
+
+	genre_ratings_csv_path = root / 'data/analysis/genre_wise_out_of_10.csv'
+	genre_ratings_df = pd.read_csv(genre_ratings_csv_path)
+
+	proper_name_dict = {
+						'spotify': 'Spotify',
+						'apple': 'Apple',
+						'ytmusic': 'YouTube Music',
+						'amazon': 'Amazon',
+						'jiosaavn': 'JioSaavn',
+						'wynk': 'Wynk',
+						'hungama': 'Hungama',
+						'gaana': 'Gaana',
+						}
+
+	genre_ratings_df['service'] =\
+		genre_ratings_df['service'].map(proper_name_dict)
+
+	global_list= ['Amazon','Apple','Spotify','YouTube Music']
+	homegrown_list = ['Gaana','Hungama','JioSaavn','Wynk']
+						
+
+	genre_ratings_df.rename(columns =\
+			 {'Western Classical':"West'n Class'l"}, inplace = True)
+
+	genre_list = ['Pop', 'EDM', 'Rock', 'Metal', 'Hip-Hop', 'R&B', 
+					'Jazz', 'Blues', "West'n Class'l",'World Music']
+
+	new_df = pd.DataFrame(genre_list, columns =['genre'])
+
+	new_cols = ['Best global service',
+				'Best global service rating',
+				'Best homegrown service',
+				'Best homegrown service rating'
+				]
+
+	for col in new_cols:
+		new_df[col] = np.nan
+
+	for genre in genre_list:
+		culled_df_raw = genre_ratings_df[['service', genre]]
+		culled_df = copy.deepcopy(culled_df_raw)
+
+		culled_df_global = culled_df[culled_df['service'].isin(global_list)]
+		sorted_df_global =\
+			culled_df_global.sort_values(by=[genre], ascending=False)
+		# print(sorted_df_global)
+		top_global_service = sorted_df_global['service'].iloc[0]
+		top_global_service_rating = sorted_df_global[genre].iloc[0]
+		new_df.loc[new_df['genre'] == genre, 'Best global service'] =\
+															 top_global_service
+		new_df.loc[new_df['genre'] == genre, 'Best global service rating'] =\
+													top_global_service_rating
+
+		culled_df_homegrown = culled_df[culled_df['service'].isin(homegrown_list)]
+		sorted_df_homegrown =\
+			culled_df_homegrown.sort_values(by=[genre], ascending=False)
+		# print(sorted_df_homegrown)
+		top_homegrown_service = sorted_df_homegrown['service'].iloc[0]
+		top_homegrown_service_rating = sorted_df_homegrown[genre].iloc[0]
+		new_df.loc[new_df['genre'] == genre, 'Best homegrown service'] =\
+															 top_homegrown_service
+		new_df.loc[new_df['genre'] == genre, 'Best homegrown service rating'] =\
+													top_homegrown_service_rating
+
+	new_df.to_csv(root / 'data/analysis/top_homegrown_global.csv', 
+						encoding='utf-8', index=False)
+
+	
+
 ########## RUN THE FUNCTION #######################
 
 input_csv_path =\
-	root/'data/match_grid_expanded_sep_04_with_rights_holder_final.csv'
+	root/'data/match_grid_expanded_sep_27_after_jiosaavn_rights_holder_final.csv'
 calculate_scores(input_csv_path)
 

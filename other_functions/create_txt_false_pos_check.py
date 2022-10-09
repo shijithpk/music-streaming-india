@@ -58,15 +58,16 @@ def create_txt_false_positive_check(service_list, round_num):
 				print(statement_B, file=f)
 
 service_list = [
-				'amazon',
+				# 'amazon',
 				# 'apple',
 				# 'gaana',
 				# 'hungama',
-				# 'jiosaavn',
+				'jiosaavn',
 				# 'spotify',
 				# 'wynk',
-				# 'ytmusic',
+				'ytmusic',
 				]
 
-round_num = '09'
+round_num = '10'
+
 create_txt_false_positive_check(service_list, round_num)

@@ -92,30 +92,30 @@ def integrate_partial_csvs(old_csv_path, round_num,
 	new_expanded_grid_df.to_csv(new_expanded_grid_csv_path, encoding='utf-8')
 
 # for first run of code put old_csv_path = all_data_v??.csv
-old_csv_path = 'data/match_grid_expanded_sep_02_after_insertion.csv'
-new_csv_path = 'data/match_grid_expanded_sep_04_after_integration.csv'
-round_num = '09'
+old_csv_path = 'data/match_grid_expanded_sep_23_after_amazon_insertion.csv'
+new_csv_path = 'data/match_grid_expanded_sep_23_after_wynk_update.csv'
+round_num = '10'
 
 services_taken = [
-					'amazon',
-					'apple',
+					# 'amazon',
+					# 'apple',
 					# 'gaana',
 					# 'hungama',
-					'jiosaavn',
-					'spotify',
+					# 'jiosaavn',
+					# 'spotify',
 					'wynk',
-					'ytmusic',
+					# 'ytmusic',
 					]
 
 services_ignored = [
-					# 'amazon',
-					# 'apple',
+					'amazon',
+					'apple',
 					'gaana',
 					'hungama',
-					# 'jiosaavn',
-					# 'spotify',
+					'jiosaavn',
+					'spotify',
 					# 'wynk',
-					# 'ytmusic',
+					'ytmusic',
 					]
 
 integrate_partial_csvs(	old_csv_path=old_csv_path, 
@@ -124,3 +124,6 @@ integrate_partial_csvs(	old_csv_path=old_csv_path,
 						services_ignored=services_ignored, 
 						new_csv_path=new_csv_path
 						)
+
+
+# cd /home/ubuntu/work/2022_03_17_music_app_remote/ && stdbuf -o0 -e0 /usr/bin/python3 ./other_functions/integrate_partial_csvs.py >> /home/ubuntu/work/2022_03_17_music_app_remote/responses_logs/cron_logs/`date +\%Y-\%m-\%d-\%H:\%M`-partial-csv-integration-cron.log 2>&1
